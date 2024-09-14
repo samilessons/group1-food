@@ -90,4 +90,50 @@ document.addEventListener("DOMContentLoaded", () => {
 
   setTimer(".timer", deadline);
   // timer end
+
+  // modal start
+  const modalOpenTriggers = document.querySelectorAll("[data-modal-trigger]");
+  const modalCloseTrigger = document.querySelector("[data-modal-close]");
+  const modal = document.querySelector(".modal");
+
+  function showModal() {
+    modal.classList.remove("hide");
+    modal.classList.add("show");
+    document.body.style.overflowY = "hidden";
+    clearTimeout(modalTimerID);
+  }
+
+  function closeModal() {
+    modal.classList.remove("show");
+    modal.classList.add("hide");
+    document.body.style.overflowY = "auto";
+  }
+
+  modalOpenTriggers.forEach(btn => btn.addEventListener("click", showModal));
+
+  modalCloseTrigger.addEventListener("click", closeModal);
+
+  modal.addEventListener("click", (e) => {
+    if (e.target && e.target === modal) {
+      closeModal();
+    }
+  });
+
+  window.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.matches(".show")) {
+      closeModal();
+    }
+  });
+
+  const modalTimerID = setTimeout(showModal, 60000);
+
+  function showModalByScroll() {
+    if (window.scrollY + document.documentElement.clientHeight >= document.documentElement.scrollHeight) {
+      showModal();
+      window.removeEventListener("scroll", showModalByScroll);
+    }
+  }
+
+  window.addEventListener("scroll", showModalByScroll);
+  // modal end
 });
