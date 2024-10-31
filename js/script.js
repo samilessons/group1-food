@@ -213,36 +213,30 @@ document.addEventListener("DOMContentLoaded", () => {
   function postData(form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
-
-      console.log(form);
-
       const statusMessage = document.createElement("p");
       statusMessage.classList.add("status_message");
       statusMessage.innerHTML = messages.loading;
       form.append(statusMessage);
 
-      const request = new XMLHttpRequest();
-      request.open("POST", "server.php");
-
-      // request.setRequestHeader("Content-Type", "multipart/form-data");
-      // const data = new FormData(form);
-
-      request.setRequestHeader("Content-type", "application/json; charset=utf-8");
-      const data = JSON.stringify(Object.fromEntries(new FormData(form)));
-
-      request.send(data);
-
-      request.addEventListener("load", function () {
-        if (request.status === 200) {
-          console.log(request.response);
+      fetch("server.php", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(Object.fromEntries(new FormData(form)))
+      })
+        .then(data => data.text())
+        .then(data => {
+          console.log(data);
           statusMessage.textContent = messages.success;
-          form.reset();
           statusMessage.remove();
           showResponseModal(messages.success);
-        } else {
+        })
+        .catch(e => {
           showResponseModal(messages.failure);
-        }
-      })
+          console.log(e);
+        })
+        .finally(() => form.reset());
     });
   }
 
