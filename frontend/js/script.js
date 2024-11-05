@@ -208,9 +208,9 @@ document.addEventListener("DOMContentLoaded", () => {
     failure: "Failure..."
   };
 
-  forms.forEach(form => postData(form));
+  forms.forEach(form => addUserInfo(form));
 
-  function postData(form) {
+  function addUserInfo(form) {
     form.addEventListener("submit", function (e) {
       e.preventDefault();
       const statusMessage = document.createElement("p");
@@ -218,14 +218,7 @@ document.addEventListener("DOMContentLoaded", () => {
       statusMessage.innerHTML = messages.loading;
       form.append(statusMessage);
 
-      fetch("server.php", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(Object.fromEntries(new FormData(form)))
-      })
-        .then(data => data.text())
+      postData("http://localhost:8888/add-user-info/", new FormData(form))
         .then(data => {
           console.log(data);
           statusMessage.textContent = messages.success;
@@ -262,5 +255,31 @@ document.addEventListener("DOMContentLoaded", () => {
       prevModalDialog.classList.add("show");
       closeModal();
     }, 1500);
+  }
+
+  getData("http://localhost:8888/get-user-info")
+    .then(data => console.log(data))
+    .cath(e => console.log(e));
+
+  async function postData(url, data) {
+    const res = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(Object.fromEntries(data))
+    });
+
+    return await res.json();
+  }
+
+  async function getData(url) {
+    const res = await fetch(url);
+
+    if (!res.ok) {
+      throw new Error(`Error: ${res.statusText}`)
+    }
+
+    return res.json();
   }
 });
