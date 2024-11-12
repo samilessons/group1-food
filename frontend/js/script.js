@@ -173,19 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
         return new MenuCard(`img/tabs/${image}`, title, description, price).render()
       })
     })
-
-  // axios.get("http://localhost:8888/get-men")
-  //   .then(({ data }) => {
-  //     console.log(data);
-  //     data.map(({ image, title, description, price }) => {
-  //       return new MenuCard(`img/tabs/${image}`, title, description, price).render()
-  //     })
-  //   })
-  //   .catch(e => console.log(e.message));
   // menu end
 
-  // forms
-
+  // forms start
   const forms = document.querySelectorAll("form");
 
   const messages = {
@@ -242,7 +232,53 @@ document.addEventListener("DOMContentLoaded", () => {
       closeModal();
     }, 1500);
   }
+  // forms end
 
+  // slider start
+  const slides = document.querySelectorAll(".offer__slide");
+  const prev = document.querySelector(".offer__slider-prev");
+  const next = document.querySelector(".offer__slider-next");
+  const total = document.querySelector("#total");
+  const current = document.querySelector("#current");
+
+  let slideIndex = 1;
+
+  showSlides(slideIndex);
+  
+  if (slides.length < 10) {
+    total.textContent = `0${slides.length}`;
+  } else {
+    total.textContent = slides.length;
+  }
+
+  function showSlides(i) {
+    if (i > slides.length) {
+      slideIndex = 1;
+    }
+
+    if (i < 1) {
+      slideIndex = slides.length;
+    }
+
+    slides.forEach(slide => slide.style.display = "none");
+    slides[slideIndex - 1].style.display = "block";
+
+    if (slides.length < 10) {
+      current.textContent = `0${slideIndex}`;
+    } else {
+      current.textContent = slideIndex;
+    }
+  }
+
+  function changeSlideIndex(i) {
+    showSlides(slideIndex += i);
+  }
+
+  prev.addEventListener("click", () => changeSlideIndex(-1));
+  next.addEventListener("click", () => changeSlideIndex(1));
+  // slider end
+
+  // global function start
   async function postData(url, data) {
     const res = await fetch(url, {
       method: "POST",
@@ -264,4 +300,5 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return res.json();
   }
+  // global function end
 });
