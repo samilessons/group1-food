@@ -393,6 +393,70 @@ document.addEventListener("DOMContentLoaded", () => {
  
   // slider end
 
+  // calculator start
+  const calcResult = document.querySelector(".calculating__result span");
+
+  let gender = "female", height, weight, age, ratio = 1.375;
+
+  function calcTotal() {
+    if (!gender || !height || !weight || !age || !ratio) {
+      calcResult.textContent = "_______";
+      return;
+    }
+
+    if (gender === "female") {
+      calcResult.textContent = ((655.1 + (9.563 * weight) + (1.85 * height) - (4.676 * age)) * ratio).toFixed(2);
+    }
+
+    else {
+      calcResult.textContent = ((66.5 + (13.75 * weight) + (5.003 * height) - (6.775 * age)) * ratio).toFixed(2);
+    }
+  }
+
+  calcTotal();
+
+  function getStaticInfo(parentSelector, activeClass) {
+    const elements = document.querySelectorAll(`${parentSelector} div`);
+    elements.forEach(elem => {
+      elem.addEventListener("click", function (e) {
+        if (e.target.getAttribute("data-ratio")) {
+          ratio = parseFloat(e.target.dataset.ratio);
+        }
+
+        if (e.target.getAttribute("id")) {
+          gender = e.target.id;
+        }
+
+        elements.forEach(elem => elem.classList.remove(activeClass));
+        e.target.classList.add(activeClass);
+        calcTotal();
+      });
+    });
+  }
+
+  getStaticInfo("#gender", "calculating__choose-item_active");
+  getStaticInfo(".calculating__choose_big", "calculating__choose-item_active");
+
+  function getDynamicInfo(selector) {
+    const input = document.querySelector(selector);
+
+    input.addEventListener("input", function () {
+      switch (input.id) {
+        case "height": parseFloat(height = input.value); break;
+        case "weight": parseFloat(weight = input.value); break;
+        case "age": parseFloat(age = input.value); break;
+      }
+
+      calcTotal();
+    });
+  }
+
+  getDynamicInfo("#height");
+  getDynamicInfo("#weight");
+  getDynamicInfo("#age");
+
+  // calculator end
+
   // global function start
   async function postData(url, data) {
     const res = await fetch(url, {
