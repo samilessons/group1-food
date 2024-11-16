@@ -451,6 +451,7 @@ a {
 .menu .container,
 .menu__item-price {
   display: flex;
+  gap: 8px;
   justify-content: space-between
 }
 
@@ -468,7 +469,7 @@ a {
 }
 
 .menu .container {
-  align-items: flex-start
+  align-items: stretch
 }
 
 .menu__field {
