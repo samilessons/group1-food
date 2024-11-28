@@ -8,5 +8,24 @@ module.exports = {
     path: __dirname + "/js"
   },
   watch: true,
-  devtool: "source-map"
+  devtool: "source-map",
+
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+          options: {
+            presets: [["@babel/preset-env", {
+              debug: true,
+              corejs: 3,
+              useBuiltIns: "usage"
+            }]]
+          }
+        }
+      }
+    ]
+  }
 }
